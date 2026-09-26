@@ -1,15 +1,10 @@
 # Annotation guideline — Phân nhóm biển báo giao thông (biển nhỏ, xa, bị che)
 
-**Version:** v2
+**Version:** v3
 
 <!--
-v0 = chưa có bản nháp. Đổi dòng Version ở trên thành v1 khi xong bản nháp đầu, v2 sau calibration, v3 sau blind
-handoff; mỗi lần tăng version ghi một dòng vào 08_revision_log.md. `make freeze` đòi v2 trở lên.
-
-File này là thứ nhóm peer nhận nguyên văn trong blind pack và là Guide dán vào CVAT. Peer KHÔNG nhận
-edge_case_cards.md, gold_decisions.csv hay sample_pack.csv. Rule nào peer cần biết phải nằm ở đây.
-No hidden rules: rule chỉ giải thích bằng miệng thì coi như không tồn tại.
-Ví dụ trong guideline chỉ dùng ảnh split example hoặc calibration, không dùng ảnh blind.
+v0 = chưa có bản nháp. v1 = bản nháp đầu. v2 = sau calibration nội bộ. v3 = sau blind handoff test.
+File này là thứ nhóm peer nhận nguyên văn trong blind pack và là Guide dán vào CVAT.
 -->
 
 ## 1. Objective + scope
@@ -22,12 +17,13 @@ Label bounding box cho từng biển báo giao thông nhìn thấy được tron
 - Biển tạm thời (biển công trường, biển phân làn tạm) nếu có khung/cột đỡ.
 - Biển phản chiếu ban đêm có thể nhận ra hình dạng (dù không đọc được nội dung).
 - Biển bị che **một phần** (nhìn thấy ≥ 20% diện tích) — label theo visible extent.
+- Biển chỉ dẫn / chỉ hướng hình chữ nhật hoặc hình vuông gắn trên cột đường.
 
 **Ngoài scope — IGNORE, không vẽ shape:**
 
-- Mặt sau biển (chỉ thấy tấm kim loại phẳng).
-- Biển phụ nhỏ gắn dưới biển chính (ví dụ tấm chữ nhật ghi thời gian hiệu lực).
-- Biển quảng cáo thương mại (billboard), biển tên đường phố gắn tường.
+- Mặt sau biển (chỉ thấy tấm kim loại phẳng, không thấy mặt biển).
+- Biển phụ đứng riêng lẻ một mình (không có biển chính gắn phía trên).
+- Biển quảng cáo thương mại (billboard), biển tên đường phố gắn tường, biển cửa hàng.
 - Hình ảnh biển báo **in trên thùng xe** hoặc in trên mặt đường (vạch sơn chỉ dẫn).
 - Biển long môn (overhead gantry) treo cao trên đường.
 - Phản chiếu biển báo trên kính xe hoặc mặt đường ướt.
@@ -36,8 +32,8 @@ Label bounding box cho từng biển báo giao thông nhìn thấy được tron
 ## 2. Annotation unit
 
 - Đơn vị: **ảnh tĩnh** (không có track/temporal), mỗi **biển báo vật lý riêng biệt** là một instance — một shape `rectangle`.
-- Nếu hai biển gắn trên cùng một cột nhưng là hai biển riêng → vẽ **hai shape riêng biệt**.
-- Nếu biển chính có biển phụ gắn bên dưới → vẽ **một shape** bao toàn bộ khung (biển phụ nằm trong scope biển chính).
+- Nếu hai biển chính gắn trên cùng một cột → vẽ **hai shape riêng biệt**.
+- Nếu biển chính có biển phụ gắn bên dưới cùng khung/cột → vẽ **một shape** bao toàn bộ cụm biển (biển chính + biển phụ).
 - Nếu một biển báo tổng hợp (gộp nhiều thông tin trong một khung duy nhất) → vẽ **một shape** bao toàn bộ khung.
 - Một biển bị vật che chia thành hai mảnh nhìn thấy → vẫn là **một** instance: vẽ một khung bao cả hai mảnh.
 
@@ -64,10 +60,11 @@ Một class `traffic_sign`, hai attribute select bắt buộc và một checkbox
 | `danger` | Biển **nguy hiểm / cảnh báo** — cảnh báo mối nguy phía trước | Tam giác đỉnh hướng lên, viền đỏ | Đường trơn, đường cong, công trường, trẻ em |
 | `mandatory` | Biển **bắt buộc** — chỉ định hành động phải thực hiện | Hình tròn, nền xanh dương | Đi thẳng, rẽ phải, tốc độ tối thiểu |
 | `priority` | Biển **ưu tiên** — xác định quyền ưu tiên tại giao lộ | Bát giác STOP; tam giác đỉnh hướng xuống; thoi vàng viền trắng | STOP, nhường đường (Give Way), đường ưu tiên |
-| `other` | Biển xác định được là biển giao thông nhưng không khớp 4 nhóm trên | Là biển giao thông nhưng không rõ nhóm | Biển đặc thù địa phương lạ |
+| `informational` | Biển **chỉ dẫn / thông tin** — chỉ hướng, lối ra, khoảng cách | Hình chữ nhật hoặc hình vuông, nền xanh dương/xanh lá/trắng | Biển chỉ hướng, biển số km, biển exit, biển phân làn |
+| `other` | Biển xác định được là biển giao thông nhưng không khớp 5 nhóm trên | Là biển giao thông nhưng không rõ nhóm | Biển đặc thù địa phương lạ |
 | `unknown` | Không nhận ra được nhóm do mờ, loá, góc độ | Chắc chắn là biển nhưng không thấy hình dạng hoặc màu viền | Biển quá mờ, ngược sáng hoàn toàn |
 
-> **Quy tắc phân nhóm nhanh:** tròn + viền đỏ → `prohibitory`; tam giác + viền đỏ → `danger`; tròn + nền xanh → `mandatory`; bát giác/tam giác ngược/thoi vàng → `priority`. Khi phân vân giữa hai nhóm: ưu tiên theo **hình dạng** rồi tick `needs_review`.
+> **Quy tắc phân nhóm nhanh:** tròn + viền đỏ → `prohibitory`; tam giác + viền đỏ → `danger`; tròn + nền xanh → `mandatory`; bát giác/tam giác ngược/thoi vàng → `priority`; chữ nhật/vuông nền xanh/xanh lá → `informational`. Khi phân vân giữa hai nhóm: ưu tiên theo **hình dạng** rồi tick `needs_review`.
 
 ### Attribute `visibility`
 
@@ -86,7 +83,7 @@ Một class `traffic_sign`, hai attribute select bắt buộc và một checkbox
 
 ### Tag ảnh `image_escalate`
 
-- Gắn tag này vào **cả frame** (không phải một shape cụ thể) khi chất lượng ảnh quá kém (mưa lớn, sương mù dày, tối hoàn toàn) hoặc có nhiều vị trí không quyết định được trong cùng một ảnh.
+- Gắn tag `image_escalate` vào **cả frame** (không phải một shape cụ thể) khi chất lượng ảnh quá kém (mưa lớn, sương mù dày, tối hoàn toàn) hoặc có nhiều vị trí không quyết định được trong cùng một ảnh.
 
 ## 5. Inclusion / exclusion
 
@@ -100,7 +97,7 @@ Một class `traffic_sign`, hai attribute select bắt buộc và một checkbox
 **Không label (IGNORE):**
 
 - Mặt sau biển (chỉ thấy tấm kim loại phẳng, không thấy mặt biển).
-- Biển phụ đứng riêng lẻ (không có biển chính phía trên).
+- Biển phụ đứng riêng lẻ một mình (không có biển chính phía trên).
 - Biển quảng cáo, biển thương mại, biển tên phố gắn tường, biển cửa hàng.
 - Vật giống biển nhưng rõ ràng không phải biển giao thông (đồng hồ, bảng hiệu tròn, logo).
 - Phản chiếu, bóng in, hình ảo biển báo trên kính/nước.
@@ -166,10 +163,11 @@ Chỉ dùng ảnh split `example` hoặc `calibration`.
 |---|---|---|---|
 | GTS05 | Biển tròn viền đỏ, rõ nét, toàn bộ biển nhìn thấy | 1 bbox · `category = prohibitory` · `visibility = clear` · `needs_review = false` | Mục 4, 5 |
 | GTS09 | Biển rất nhỏ ở xa, cạnh ngắn ≈ 14 px, nhận ra tam giác viền đỏ | 1 bbox · `category = danger` · `visibility = blurred` · `needs_review = false` | Mục 6 — blurred, bbox ≥ 12 px |
-| GTS22 | Ảnh đường thẳng không có biển giao thông | Không vẽ gì (IGNORE toàn ảnh) | Mục 5 — negative case |
+| GTS28 | Ảnh đường thẳng không có biển giao thông | Không vẽ gì (IGNORE toàn ảnh) | Mục 5 — negative case |
 | GTS12 | Biển chính (tròn cấm) có biển phụ chữ nhật gắn bên dưới | 1 bbox bao cả hai biển · `category = prohibitory` | Mục 2 — biển phụ nằm trong scope biển chính |
 | GTS07 | Biển STOP bát giác đỏ rõ nét | 1 bbox · `category = priority` · `visibility = clear` | Mục 4 — STOP = priority |
 | BDD07 | Biển bị cành cây che ~45% — còn thấy phần tròn đỏ rõ | 1 bbox visible extent · `category = prohibitory` · `visibility = occluded` | Mục 5 — nhìn thấy ≥ 20% |
+| GTS10 | Biển cấm vượt hình tròn viền đỏ | 1 bbox · `category = prohibitory` · `visibility = clear` | Mục 4 |
 
 ## 10. Common mistakes
 
@@ -178,8 +176,9 @@ Chỉ dùng ảnh split `example` hoặc `calibration`.
 | Bao gồm cột đỡ vào bbox | Kéo cạnh dưới bbox đến chân biển, không kéo xuống cột |
 | Vẽ bbox quá rộng bao cả vùng trống xung quanh | Ôm sát visible extent — chỉ phần vật liệu biển |
 | Quên label biển nhỏ ở xa | Zoom ảnh 2–3× để kiểm tra góc — biển nhỏ vẫn label nếu cạnh ngắn ≥ 12 px |
-| Label biển quảng cáo thương mại | Hỏi: có phải biển cấm / nguy hiểm / bắt buộc / ưu tiên không? Không → IGNORE |
+| Label biển quảng cáo thương mại | Hỏi: có phải biển cấm / nguy hiểm / bắt buộc / ưu tiên / chỉ dẫn không? Không → IGNORE |
 | Gán `category = prohibitory` cho biển STOP | STOP là bát giác → `priority`, không phải `prohibitory` |
+| Nhầm biển chữ nhật chỉ hướng thành `other` | Biển chữ nhật/vuông chỉ hướng = `informational`, không phải `other` |
 | Để `category = __undefined__` khi export | Phải chọn category trước khi bấm Next — `__undefined__` = bài thiếu |
 | Dùng `image_escalate` khi chỉ một biển khó | Tag `image_escalate` chỉ khi cả ảnh có vấn đề — một biển khó thì tick `needs_review` trên shape đó |
 | Bỏ sót biển bị che 40% | Kiểm tra ngưỡng 20%: nhìn thấy ≥ 20% diện tích → phải label |

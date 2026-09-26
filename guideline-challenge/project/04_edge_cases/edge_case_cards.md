@@ -60,68 +60,69 @@ Sample: GTS25 (blind)
 Scene: Ảnh giao lộ có 2 biển gắn trên cùng một cột: biển STOP (bát giác đỏ) và biển cấm rẽ trái (tròn đỏ)
 Observation: Hai biển riêng biệt về mặt vật lý, gắn trên cùng cột, không chồng lên nhau
 Decision: LABEL × 2 (hai instance riêng biệt)
-Expected: Instance 1: traffic_sign, category=prohibitory (STOP), visibility=clear, confidence=certain. Instance 2: traffic_sign, category=prohibitory (cấm rẽ trái), visibility=clear, confidence=certain
-Rationale: Mục 2 guideline: "hai biển gắn trên cùng cột → vẽ hai shape riêng biệt"; cả hai đều là prohibitory critical — bỏ sót một cái là lỗi critical
+Expected: Instance 1: traffic_sign, category=priority (STOP), visibility=clear. Instance 2: traffic_sign, category=prohibitory (cấm rẽ trái), visibility=clear
+Rationale: Mục 2 guideline: "hai biển gắn trên cùng cột → vẽ hai shape riêng biệt"; STOP là priority, cấm rẽ trái là prohibitory
 Common mistake: Vẽ một bbox duy nhất bao cả hai biển → count là 1 instance thay vì 2; hoặc bao luôn cột vào bbox
 Diversity: conflict / critical
 
 ---
 
 CASE ID: EC-06
-Sample: BDD19 (blind)
+Sample: BDD19 (calibration)
 Scene: Ảnh đêm, có vật thể hình chữ nhật sáng bên đường — có thể là biển giao thông hoặc biển quảng cáo đèn LED
-Observation: Thấy hình chữ nhật phát sáng, màu xanh/trắng, không phân biệt được biển giao thông hay quảng cáo; không thấy hình dạng đặc trưng (tròn/tam giác) hay màu đặc trưng (viền đỏ)
+Observation: Thấy hình chữ nhật phát sáng, màu xanh/trắng, không phân biệt được biển giao thông hay quảng cáo
 Decision: ESCALATE
-Expected: Shape rectangle ước tính vị trí + frame tag ESCALATE + category=unknown + confidence=uncertain
-Rationale: Không đủ bằng chứng để xác định có phải biển giao thông không (không có hình dạng đặc trưng, không có màu đặc trưng) → ESCALATE; khác với EC-03 (biết là biển, chỉ không biết category)
-Common mistake: (1) IGNORE vì nghĩ là biển quảng cáo — nhưng không chắc; (2) LABEL với category=unknown mà không có frame tag ESCALATE; (3) không vẽ shape khi ESCALATE
+Expected: Shape rectangle ước tính vị trí + tick needs_review=true + category=unknown + visibility=blurred
+Rationale: Không đủ bằng chứng để xác định có phải biển giao thông không → needs_review=true
+Common mistake: IGNORE vì nghĩ là biển quảng cáo — nhưng không chắc
 Diversity: escalation / ambiguity
 
 ---
 
 CASE ID: EC-07
-Sample: BDD22 (blind)
-Scene: Ảnh buổi chiều, ánh mặt trời thẳng vào camera, biển giao thông ở khu vực loá sáng — thấy hình dạng tròn trắng nhưng không có màu sắc nào khác
-Observation: Biển hoàn toàn bị overexpose (loá trắng) — thấy hình tròn nhưng không đọc được bất kỳ nội dung hay màu sắc nào
-Decision: LABEL với UNKNOWN
-Expected: traffic_sign, category=unknown, visibility=unreadable, confidence=uncertain; bbox ôm hình tròn nhìn thấy
-Rationale: Hình tròn trên cột đường → xác định được là biển giao thông (đủ hình dạng) → UNKNOWN, không ESCALATE; visibility=unreadable vì không đọc được nội dung
-Common mistake: Bỏ sót vì nghĩ biển loá không label được; hoặc dùng ESCALATE vì không đọc được (nhưng đã xác định được là biển giao thông)
-Diversity: low_visibility / unreadable
+Sample: GTS22 (blind)
+Scene: Giao lộ có biển tam giác ngược nhường đường và bảng chỉ dẫn
+Observation: Biển tam giác ngược nhường đường (Give Way)
+Decision: LABEL
+Expected: traffic_sign, category=priority, visibility=clear; bbox ôm sát viền biển tam giác
+Rationale: Tam giác ngược = Give Way = priority critical
+Common mistake: Gán category=danger vì nghĩ tam giác là danger — tam giác ngược là priority, tam giác xuôi mới là danger
+Diversity: critical / priority
 
 ---
 
 CASE ID: EC-08
 Sample: BDD14 (example)
 Scene: Đường quốc lộ, biển phản chiếu ánh đèn xe tải in trên thùng xe — hình dạng giống biển cấm vượt
-Observation: Trên thùng xe tải có in hình biển cấm vượt (theo quy định khi xe tải) nhưng là in trực tiếp lên xe, không phải biển cắm cột
+Observation: Trên thùng xe tải có in hình biển cấm vượt nhưng là in trực tiếp lên xe, không phải biển cắm cột
 Decision: IGNORE
 Expected: Không vẽ shape nào cho hình biển báo in trên xe
-Rationale: Mục 5 guideline: "Biển báo in trên thùng xe → ngoài scope → IGNORE"; biển giao thông trên cột và biển in trên xe khác nhau về downstream utility — model detect biển trên cột, không detect hình in trên xe
-Common mistake: Label biển in trên xe vì nhìn thấy hình biển cấm — phải kiểm tra "gắn trên cột/khung" hay "in trên xe"
+Rationale: Mục 5 guideline: "Biển báo in trên thùng xe → ngoài scope → IGNORE"
+Common mistake: Label biển in trên xe vì nhìn thấy hình biển cấm
 Diversity: ambiguity / out_of_scope
 
 ---
 
 CASE ID: EC-09
-Sample: BDD02 (calibration)
-Scene: Ảnh cao tốc, biển giới hạn tốc độ 80 bị xe bên cạnh che ~65% (chỉ thấy góc phải dưới với phần số "0")
-Observation: Thấy rất ít của biển — ước tính < 35% diện tích; có thể thấy phần số "0" trên nền trắng, không chắc có viền đỏ
-Decision: LABEL (nếu ước tính ≥ 30%) hoặc IGNORE (nếu ước tính < 30%)
-Expected: traffic_sign, category=prohibitory, visibility=occluded, confidence=uncertain; bbox bao phần visible
-Rationale: Đây là case boundary của ngưỡng 30% — annotator phải ước lượng bằng mắt; guideline cho phép sai sót trong zone 25–35% (→ confidence=uncertain); quan trọng là không bỏ sót biển cấm tốc độ nếu thấy ≥ 30%
-Common mistake: (1) Bỏ sót vì thấy quá ít biển; (2) Dùng confidence=certain dù đang ở vùng không chắc; (3) label amodal thay vì visible extent
-Diversity: occlusion / critical / boundary_case
+Sample: GTS20 (blind)
+Scene: Biển chỉ hướng hình chữ nhật xanh
+Observation: Biển chữ nhật lớn chỉ hướng đường
+Decision: LABEL
+Expected: traffic_sign, category=informational, visibility=clear
+Rationale: Biển chữ nhật chỉ hướng = informational
+Common mistake: Gán category=other vì không tìm thấy nhóm chỉ dẫn
+Diversity: informational
 
 ---
 
 CASE ID: EC-10
-Sample: GTS18 (blind)
-Scene: Đường quốc lộ ngày nắng, biển cấm tốc độ 60 km/h rõ nét nhưng phần trên bị một cành cây che ~35%
-Observation: Biển tròn với số 60 rõ ràng, viền đỏ nhìn thấy ~65% diện tích; cành cây che phần trên góc trái
+Sample: GTS23 (blind)
+Scene: Biển cấm tốc độ rõ nét
+Observation: Biển tròn viền đỏ giới hạn tốc độ
 Decision: LABEL
-Expected: traffic_sign, category=prohibitory, visibility=occluded, confidence=certain; bbox bao visible extent (phần tròn nhìn thấy)
-Rationale: Nhìn thấy ~65% >> ngưỡng 30%; number + viền đỏ = đủ bằng chứng prohibitory; đây là critical case vì biển cấm tốc độ — bỏ sót = lỗi critical trong downstream ADAS
-Common mistake: Vẽ bbox amodal (bao cả phần bị che ước tính) thay vì visible extent
-Diversity: occlusion / critical
+Expected: traffic_sign, category=prohibitory, visibility=clear
+Rationale: Hình tròn viền đỏ = prohibitory critical
+Common mistake: Bỏ sót biển nhỏ ở xa
+Diversity: critical / prohibitory
+
 
