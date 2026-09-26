@@ -1,16 +1,16 @@
 sample_id,split,tags,reason
-GTS07,example,normal,Biển Stop hình bát giác đỏ rõ nét — ví dụ điển hình prohibitory; test mục 4 taxonomy
-GTS01,example,normal,Biển tam giác cảnh báo đường cong rõ nét — ví dụ điển hình danger
-BDD05,example,normal,Ảnh cao tốc ban ngày có biển giới hạn tốc độ rõ — ví dụ normal prohibitory
-GTS04,example,negative,Ảnh không có biển giao thông nào — ví dụ negative để annotator biết khi nào không cần vẽ gì
-BDD14,example,occlusion,Biển bị cành cây che ~40% — ví dụ label với visibility=occluded
-GTS10,calibration,normal,Biển cấm vượt tròn đỏ rõ nét — test class prohibitory + geometry
-GTS15,calibration,small_far,Biển tam giác nhỏ ở xa — test ngưỡng bbox ≥ 10px và category=danger
-BDD07,calibration,low_visibility,Ảnh chạng vạng/tối có biển — test visibility rule và confidence=uncertain
-GTS22,calibration,negative,Ảnh không có biển giao thông — test negative case (không vẽ gì)
-BDD02,calibration,occlusion;edge,Biển cấm bị xe khác che ~50% — test inclusion rule 30% visible
-BDD16,calibration,occlusion;edge,Biển bị cắt mép ảnh bên trái — test visibility=truncated + bbox kéo đến cạnh ảnh
-GTS18,blind,critical,Biển cấm tốc độ 60 bị che một phần cành cây ~35% — critical: bỏ sót = nguy hiểm ADAS
-BDD19,blind,edge;ambiguity,Ảnh đêm có vật thể sáng nghi biển giao thông — test ESCALATE vs UNKNOWN
-GTS25,blind,normal;conflict,Biển STOP + biển cấm rẽ trái trên cùng cột — test 2 instance riêng biệt
-BDD22,blind,edge;low_visibility,Biển loá sáng hoàn toàn do mặt trời — test category=unknown, visibility=blurred
+GTS01,example,normal;occlusion,Cap bien cam va tam giac nguy hiem cung cot dien
+GTS02,example,normal,Bien tam giac nguoc uu tien va bien tron hieu lenh
+GTS05,example,normal,Bien bao chi dan sang duong va bien cam
+GTS03,calibration,edge;small_far,Bien chi dan nho phia xa tren giao lo phuc tap
+GTS04,calibration,edge;occlusion;small_far,Nhieu bien chi dan tren cau vuot cao toc va bien ben le duong bi mo
+GTS06,calibration,normal,Bien cam toc do ro rang ben le duong
+GTS07,calibration,edge;small_far,Bien bao rat nho gan gam cau vuot
+GTS09,calibration,edge;small_far,Cum nhieu bien chi dan vuong huong tren cung gia do
+GTS14,calibration,normal,Bien tam giac nguy hiem ro rang ben phai duong
+GTS08,blind,ambiguity;occlusion,Bien panô thong tin lon kem cum bien le bi che khuat duoi cau vuot
+GTS10,blind,normal,Bien hieu lenh ro rang tai khu vuc nga tu do thi
+GTS11,blind,edge;small_far,Cum bien bao nho phia xa o le duong va dau cot den
+GTS12,blind,edge;critical,Bien tam giac vang canh bao nguy hiem tren duong quoc lo
+GTS13,blind,critical;ambiguity,Bien bao xa bi tan cay che khuat va bien gan cong trinh
+GTS28,blind,negative,Anh quang canh giao thong khong co bat ky bien bao nao
