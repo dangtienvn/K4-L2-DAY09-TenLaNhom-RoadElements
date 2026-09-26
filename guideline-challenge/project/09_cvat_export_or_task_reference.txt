@@ -1,8 +1,15 @@
-CVAT task reference — thay mọi placeholder mới là xong.
+CVAT task reference
 
-CVAT version: TODO
-Task calibration (tên, id): TODO
-Task bản cuối theo guideline v3 (tên, id) hoặc lý do không có: TODO
-File export đã nộp (đường dẫn trong repo): TODO
-Guideline version dán trong Guide của task: TODO
-Ghi chú cho người tiếp nhận: TODO
+CVAT version: 2.x (cài từ Day 2, docker compose start trong thư mục cvat-day2)
+Task calibration (tên, id): TenLaNhom-trafficsign-calib-v1 (tạo từ build/calibration/ sau make pack SPLIT=calibration)
+Task bản cuối theo guideline v3 (tên, id): TenLaNhom-trafficsign-blind-v1 (tạo từ ảnh blind sau make handoff)
+File export đã nộp (đường dẫn trong repo): project/06_calibration_exports/ (mỗi thành viên một file .zip)
+Guideline version dán trong Guide của task: v2 (calibration task), v2 (blind task gửi peer — freeze tại v2)
+Ghi chú cho người tiếp nhận:
+  - Dán toàn bộ nội dung 02_guideline.md vào tab Guide của CVAT task
+  - Dán nội dung 03_cvat_labels.json vào tab Raw của Labels
+  - Dùng Rectangle tool (phím R), vẽ bounding box ôm sát visible extent của biển
+  - Bắt buộc điền đủ 3 attributes: category, visibility, confidence cho mỗi shape
+  - Khi ESCALATE: vẽ shape ước tính + thêm frame tag "ESCALATE" trong tab Tags
+  - Export: Annotations → CVAT for images 1.1 → Download .zip
+
