@@ -1,11 +1,11 @@
 sample_id,decision_id,expected,severity,rationale
-GTS18,d1,label=traffic_sign category=prohibitory,critical,Biển cấm tốc độ 60 km/h bị che ~35% bởi cành cây — nhìn thấy ~65% diện tích; bỏ sót = ADAS không cảnh báo = nguy hiểm tính mạng
-GTS18,d2,visibility=occluded,minor,Biển bị cành cây che → phải gán occluded không phải clear
-GTS18,d3,geometry: bbox bao visible extent (không bao phần bị che),minor,Theo mục 3 guideline — visible extent rule
-BDD19,d1,ESCALATE: shape + frame tag ESCALATE + category=unknown + confidence=uncertain,major,Vật thể hình chữ nhật sáng đêm không đủ bằng chứng là biển giao thông — phải ESCALATE không được IGNORE
-BDD19,d2,confidence=uncertain,minor,Không xác định được có phải biển giao thông không → confidence=uncertain bắt buộc
-GTS25,d1,label=traffic_sign x2 (hai instance riêng biệt),critical,Hai biển trên cùng cột — phải vẽ 2 shape riêng theo mục 2 guideline; bỏ sót một cái = critical miss
-GTS25,d2,category=prohibitory cho cả hai instance,critical,STOP = prohibitory; cấm rẽ trái = prohibitory; sai sang mandatory/informational = critical error
-GTS25,d3,geometry: bbox không bao cột đỡ,minor,Cột đỡ không thuộc về biển — theo mục 3 geometry rule
-BDD22,d1,label=traffic_sign category=unknown visibility=unreadable confidence=uncertain,major,Biển loá sáng — nhận dạng được hình tròn trên cột → UNKNOWN không ESCALATE; bỏ sót = major
-BDD22,d2,geometry: bbox ôm hình tròn nhìn thấy,minor,Geometry theo visible extent của hình tròn loá trắng
+GTS20,d1,label=traffic_sign category=informational,major,Biển chỉ hướng hình chữ nhật xanh — informational
+GTS21,d1,label=traffic_sign category=informational,major,Biển chỉ hướng hình chữ nhật xanh — informational
+GTS22,d1,label=traffic_sign category=priority,critical,Biển tam giác ngược nhường đường (Give Way) — priority critical
+GTS22,d2,geometry: bbox ôm sát viền biển tam giác,minor,Visible extent rule
+GTS23,d1,label=traffic_sign category=prohibitory,critical,Biển cấm tốc độ — prohibitory critical
+GTS24,d1,label=traffic_sign category=informational,major,Biển hình vuông chỉ dẫn — informational
+GTS25,d1,label=traffic_sign x2 (hai instance riêng biệt),critical,Hai biển trên cùng cột — 2 shape riêng biệt
+GTS25,d2,category=priority (STOP) và category=prohibitory (cấm rẽ),critical,STOP = priority; cấm rẽ = prohibitory
+GTS25,d3,geometry: bbox không bao cột đỡ,minor,Geometry rule không bao cột đỡ
+GTS25,d4,visibility=clear,minor,Cả hai biển nhìn thấy toàn bộ rõ nét
